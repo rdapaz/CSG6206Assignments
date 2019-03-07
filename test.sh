@@ -49,13 +49,13 @@ else
 		if [ ${#results} -gt 0 ]; then
 			echo "[+] MD5 hashes for $folder:"
 			echo
+			for entry in ${results[@]}; do
+					echo $entry | awk -F \| {'print $1 ": " $2'}
+			done
 		else
 			echo "[-] No files to process"
 		fi
 
-		for entry in ${results[@]}; do
-				echo $entry | awk -F \| {'print $1 ": " $2'}
-		done
 
 	fi
 fi
