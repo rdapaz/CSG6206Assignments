@@ -42,8 +42,10 @@ if __FILE__ == $0
     MAX_COUNT = 20
     DEBUG = false
     path = '/root/Desktop/CSG6206/portfolio2/resources/lorem.txt'
+
     h = countVowels(path)
     barChart(h, MAX_COUNT, '*')
+
     if DEBUG
       h.each {|k, v| puts "#{k}: #{v}"}
     end
