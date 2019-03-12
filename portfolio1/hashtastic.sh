@@ -17,7 +17,7 @@ Description: Lists the md5 hashes of the files in the
              current folder ordered by filename in
              descending order.  Note the explicit
              paths are required.
-Usage: hashtastic.sh [filename]
+Usage: hashtastic.sh [folder]
 Examples:
   hashtastic.sh /root/Desktop/CSG6206/portfolio1/resources     
 
@@ -126,9 +126,10 @@ else
 					# This is an alternative to the HEREDOC
 					# method used above.
 
-					sqlite3 $folder/md5hash.db "INSERT INTO md5hashes \
-					(filename, md5hash) \
-					VALUES (\"$file\", \"$md5hash\");" 
+					sqlite3 $folder/md5hash.db \
+						"INSERT INTO md5hashes \
+						(filename, md5hash) \
+						VALUES (\"$file\", \"$md5hash\");" 
 					
 				fi
 			fi
@@ -147,7 +148,9 @@ else
 		# $() construct.   Here we chose the latter.
 
 				
-		results=$(sqlite3 $folder/md5hash.db "SELECT DISTINCT filename, md5hash from md5hashes ORDER BY 1 DESC;")
+		results=$(sqlite3 $folder/md5hash.db \
+			"SELECT DISTINCT filename, md5hash from md5hashes \
+			 ORDER BY 1 DESC;")
 
 		if [ ${#results} -gt 0 ]; then
 			echo "[+] MD5 hashes for $folder:"
