@@ -40,8 +40,13 @@ def countVowels(filepath)
             vowelCounter[vowel] = 0
         end
     end
+    # This ensures that the hash is sorted so as to allow it to be
+    # displayed in alphabetical order based on the key values
+    # i.e. a, e, i, o and u
     vowelCounter = vowelCounter.sort_by { |keys, values| keys }.to_h
 
+    # No need to type return <variable> in ruby, we just
+    # enter the variable that is to be returned
     vowelCounter
 end
 
@@ -65,9 +70,11 @@ def barChart(countHash, maxSymbols, symbol, debug)
         # by doing variable interpolation ruby style.  Note that we 
         # have optionally allowed a count to be displayed at the end
         # if debug is true.
-        # The portion "#{debug ? '(' + count.to_s + ')' : ''} either
-        # displays (10) if count is 10 and debug is true or nothing
-        puts "#{item}: #{symbol*(count*maxSymbols/maxScore).to_i}" + "#{debug ? ' ' + count.to_s : ''}"
+        # The portion "#{debug ? ' ' + count.to_s : ''} either
+        # displays 10 preceded by a space if count is 10 and debug is true 
+        # or nothing
+        puts "#{item}: #{symbol*(count*maxSymbols/maxScore).to_i}" + \
+                "#{debug ? ' ' + count.to_s : ''}"
     end
 end
 
@@ -78,7 +85,7 @@ end
 # in another program then execute the lines below
 if __FILE__ == $0
     # We initially define some constants
-    MAX_COUNT = 5
+    MAX_COUNT = 80
     DEBUG = true
     PATH  = '/home/rdapaz/projects/CSG6206/portfolio2/resources/lorem.txt'
     # We generate a hash, h of the vowelcount by
