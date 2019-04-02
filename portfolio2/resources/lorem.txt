@@ -1,6 +1,4 @@
-aaaaaaaa
-bbb
-cc aa
-ee
-iiii
+aaaaa
+eeee
+iii
 oo
