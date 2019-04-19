@@ -15,55 +15,55 @@
 */
 
 $data = array(
-			array(	"ID" => 1, 
-				  	"Name" => "Anna",
-					"Gender" => "Female",
-					"Age" => 12
+			array(	"ID" 		=> 1, 
+				  	"Name" 		=> "Anna",
+					"Gender" 	=> "Female",
+					"Age" 		=> 12
 				 ),
-			array(	"ID" => 2,
-					"Name" => "Bill",
-					"Gender" => "Male",
-					"Age" => 45
+			array(	"ID" 		=> 2,
+					"Name" 		=> "Bill",
+					"Gender" 	=> "Male",
+					"Age" 		=> 45
 				 ),
-			array(	"ID" => 3,
-					"Name" => "Chase",
-					"Gender" => "Male",
-					"Age" => 22 
+			array(	"ID" 		=> 3,
+					"Name" 		=> "Chase",
+					"Gender" 	=> "Male",
+					"Age" 		=> 22 
 				 ),
-			array(	"ID" => 4,
-					"Name" => "Dorothy",
-					"Gender" => "Female",
-					"Age" => 36 
+			array(	"ID" 		=> 4,
+					"Name" 		=> "Dorothy",
+					"Gender" 	=> "Female",
+					"Age" 		=> 36 
 				 ),
-			array(	"ID" => 5,
-					"Name" => "Emily",
-					"Gender" => "Female",
-					"Age" => 11
+			array(	"ID" 		=> 5,
+					"Name" 		=> "Emily",
+					"Gender" 	=> "Female",
+					"Age" 		=> 11
 				 ),
-			array(	"ID" => 6,
-					"Name" => "Dan",
-					"Gender" => "Male",
-					"Age" => 16
+			array(	"ID" 		=> 6,
+					"Name" 		=> "Dan",
+					"Gender" 	=> "Male",
+					"Age" 		=> 16
 				 ),
-			array(	"ID" => 7,
-					"Name" => "Bob",
-					"Gender" => "Male",
-					"Age" => 12
+			array(	"ID" 		=> 7,
+					"Name" 		=> "Bob",
+					"Gender" 	=> "Male",
+					"Age" 		=> 12
 				 ),
-			array(	"ID" => 8,
-					"Name" => "Cassey",
-					"Gender" => "Female",
-					"Age" => 33
+			array(	"ID" 		=> 8,
+					"Name" 		=> "Cassey",
+					"Gender" 	=> "Female",
+					"Age" 		=> 33
 				 ),
-			array(	"ID" => 9,
-					"Name" => "Alan",
-					"Gender" => "Male",
-					"Age" => 25
+			array(	"ID" 		=> 9,
+					"Name" 		=> "Alan",
+					"Gender" 	=> "Male",
+					"Age" 		=> 25
 				 ),
-			array(	"ID" => 10,
-					"Name" => "Jen",
-					"Gender" => "Female",
-					"Age" => 32
+			array(	"ID" 		=> 10,
+					"Name" 		=> "Jen",
+					"Gender" 	=> "Female",
+					"Age" 		=> 32
 				 ),
 		);
 
@@ -99,6 +99,71 @@ function parseDemographics($data) {
 
 function generateHistogram($demographic_data) {
 	
+	header ('Content-Type: image/png');
+
+
+	# We chose a 16:9 ratio for our histogram and
+	# further selected 1000mm length, hence determining
+	# the height by: height = (length x 9)/16
+	define("WIDTH", 1000);
+	define("HEIGHT", (int)(WIDTH*9)/16);
+	define("BAR_WIDTH", 150);
+	define("MARGIN", 80);
+	define("SPACER", 10);
+	define('MAX_HEIGHT', 500);
+	define('BASE', 10);
+
+	$image = @imagecreatetruecolor(WIDTH, HEIGHT)
+	      or die('Cannot Initialize new GD image stream');
+	
+	$d = $demographic_data;
+
+	$max_val = max(array(
+					$d['Male']['above 16'], 
+					$d['Male']['16 and below'],
+					$d['Female']['above 16'],
+					$d['Female']['16 and below']
+					) 
+			  );
+
+	/* 	
+		Create variables for the colours required for the
+		histogram.  Note that we captured the colour
+		using the eyedropper tool in Paint
+	*/
+
+	$grey = imageColorAllocate($image, 150, 150, 150);
+	$cyan = imageColorAllocate($image, 110, 188, 193);
+	$salmon = imageColorAllocate($image, 218, 120, 112);
+
+	imagefilledrectangle($image, 50, 530, 950, 50, $grey);
+
+	$x1 = MARGIN;
+	$y1 = (int) MAX_HEIGHT * (1 - $d['Female']['16 and below']/$max_val);
+	$x2 = $x1 + BAR_WIDTH;
+	$y2 = BASE;
+	imagefilledrectangle($image, $x1, $y1, $x2, $y2, $salmon);
+	
+	$x1 = $x2 + SPACER;
+	$y1 = (int) MAX_HEIGHT * (1 - $d['Female']['above 16']/$max_val);
+	$x2 = $x1 + BAR_WIDTH;
+	$y2 = BASE;
+	imagefilledrectangle($image, $x1, $y1, $x2, $y2, $cyan);
+
+	$x1 = $x2 + MARGIN;
+	$y1 = (int) MAX_HEIGHT * (1 - $d['Male']['16 and below']/$max_val);
+	$x2 = $x1 + BAR_WIDTH;
+	$y2 = BASE;
+	imagefilledrectangle($image, $x1, $y1, $x2, $y2, $salmon);
+	
+	$x1 = $x2 + SPACER;
+	$y1 = (int) MAX_HEIGHT * (1 - $d['Male']['above 16']/$max_val);
+	$x2 = $x1 + BAR_WIDTH;
+	$y2 = BASE;
+	imagefilledrectangle($image, $x1, $y1, $x2, $y2, $cyan);
+
+	imagepng($image, '/home/rdapaz/uni/CSG6206/portfolio3/demo.png');
+	imagedestroy($image);
 }
 
 /*  Part e. 
@@ -106,8 +171,8 @@ function generateHistogram($demographic_data) {
  */
 
 $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
-$db = new PDO('sqlite:' . $path);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db = new SQLite3($path);
+$db->enableExceptions(true);
 
 /* We will now create the table in our database to store
  the data in our array
@@ -123,7 +188,12 @@ $sql =<<<EOF
 	);
 EOF;
 
-$ret = $db->exec($sql);
+try {
+	$ret = $db->exec($sql);
+} 
+catch (Exception $e) {
+	echo 'Caught Exception: ' . $e.getMessage();
+}
 
 
 /* 
@@ -134,20 +204,22 @@ $ret = $db->exec($sql);
 
 $sql = "INSERT INTO demographics
 		(Name, Gender, Age)
-		VALUES (:name, :gender, :age);";
-$smt = $db->prepare($sql);
-$smt->bindParam(':name', $name);
-$smt->bindParam(':gender', $gender);
-$smt->bindParam(':age', $age);
+		VALUES (?, ?, ?);";
 
 foreach ($data as $p) {
-	$name = $p['Name'];
-	$gender = $p['Gender'];
-	$age = $p['Age'];
-	$insert = $smt->execute();
+	try {
+		$smt = $db->prepare($sql);
+		$smt->bindValue(1, $p['Name'], SQLITE3_TEXT);
+		$smt->bindValue(2, $p['Gender'], SQLITE3_TEXT);
+		$smt->bindValue(3, $p['Age'], SQLITE3_TEXT);
+		$insert = $smt->execute();
+	} 
+	catch (Exception $e) {
+		echo 'Caught Exception: ' . $e.getMessage();
+	}
 }
 
 $var = parseDemographics($data);
-var_dump($var);
+generateHistogram($var);
 
 ?>
