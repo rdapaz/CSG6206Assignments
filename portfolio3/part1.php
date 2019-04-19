@@ -19,9 +19,9 @@ $sum = sum(22, 2.1);
 
 echo "the sum = " . $sum . "\n";
 
-$retVal = (0 === '0') ? 'Zero is "zero"' : "Not!" ;
+$retVal = (0 == '0') ? 'Zero is "zero"' : "Not!" ;
 
-$arrayName = array('one' => 1, 'two' => 2);
+$arrayName = array('one' => 'Ric', 'two' => 2);
 
 echo $arrayName['one'] . "\n";
 
@@ -32,7 +32,30 @@ echo $arrayName['one'] . "\n";
 
 echo $retVal . "\n";
 
-$days = 1;
+$animal = Array('cat', 'mouse', 'dog');
 
-echo "Due in $days ${($days == 1) ? 'days' : 'day'}"; 
+foreach ($animal as $item) {
+	echo $item . "\n";
+}
+
+
+for ($i = 0; $i <= 100; $i++){
+	echo $i . "\n";
+
+	if ($i == 20) {
+		break;
+	}
+}
+
+
+$file = '/home/rdapaz/uni/CSG6206/portfolio3/file.txt';
+$handle = fopen($file, 'r');
+$text = fread($handle, filesize($file));
+fclose($handle);
+
+echo $text;
+
+
+
+
 ?>
