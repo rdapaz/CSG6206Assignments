@@ -82,7 +82,7 @@ if ($path == false) {
 // $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
 $db = new SQLite3($path);
 
-$sql = "SELECT ID, Name, Gender, Age from demographics
+$sql = "SELECT ID, Name, Gender, Age FROM demographics
         WHERE Gender = 'Female' ORDER BY Age ASC;";
         
 $query_results = generateTable($db, $sql);

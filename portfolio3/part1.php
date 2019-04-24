@@ -134,14 +134,18 @@ function generateHistogram($demographic_data) {
         using the eyedropper tool in Paint
     */
 
+    $font_path = '/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf';
     $grey = imageColorAllocate($image, 150, 150, 150);
     $lt_grey = imageColorAllocate($image, 200, 200, 200);
     $dk_grey = imageColorAllocate($image, 32, 32, 32);
     $cyan = imageColorAllocate($image, 110, 188, 193);
     $salmon = imageColorAllocate($image, 218, 120, 112);
+    $white = imageColorAllocate($image, 255, 255, 255);
 
-    imagefilledrectangle($image, 50, 530, 950, 50, $grey);
+    # Draw grey rectangle
+    imagefilledrectangle($image, 50, 50, 950, 530, $grey);
 
+    # Draw horizontal grid lines
     for ($i=0; $i<$max_val; $i++) {
         $tlx = 50;
         $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $i/$max_val);
@@ -151,6 +155,7 @@ function generateHistogram($demographic_data) {
     }
 
 
+    # Draw the bar for females 16 and below
     $tlx = MARGIN;
     $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $d['Female']['16 and below']/$max_val);
     echo $tly . "\n";
@@ -158,6 +163,7 @@ function generateHistogram($demographic_data) {
     $bry = BAR_TOP;
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $salmon);
     
+    # Draw the bar for females above 16
     $tlx = $brx + SPACER;
     $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $d['Female']['above 16']/$max_val);
     $brx = $tlx + BAR_WIDTH;
@@ -165,12 +171,14 @@ function generateHistogram($demographic_data) {
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $cyan);
     imageline($image, $tlx, BAR_BASE, $tlx, BAR_TOP, $lt_grey);
 
+    # Draw the bar for males 16 and below
     $tlx = $brx + MARGIN;
     $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $d['Male']['16 and below']/$max_val);
     $brx = $tlx + BAR_WIDTH;
     $bry = BAR_TOP;
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $salmon);
     
+    # Draw the bar for males above 16
     $tlx = $brx + SPACER;
     $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $d['Male']['above 16']/$max_val);
     $brx = $tlx + BAR_WIDTH;
@@ -178,29 +186,70 @@ function generateHistogram($demographic_data) {
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $cyan);
     imageline($image, $tlx, BAR_BASE, $tlx, BAR_TOP, $lt_grey);
 
-    $font_path = '/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf';
+    # Draw the white bar at the bottom
+    $tlx = 50;
+    $tly = 500;
+    $brx = 950;
+    $bry = HEIGHT;
+    imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $white);
+
+    # Draw the white 'insert' at the right
+    $tlx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 10;
+    $tly = 50;
+    $brx = 950;
+    $bry = HEIGHT;
+    imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $white);
+
+    # Draw the legend
+
+    # Draw the blue box
+    $tlx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 40;
+    $tly = 300;
+    $brx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 60;
+    $bry = 320;
+    imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $salmon);
+
+    # Draw the salmon box
+    $tlx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 40;
+    $tly = 340;
+    $brx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 60;
+    $bry = 360;
+    imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $cyan);
+
+    # Draw the text legends on the right
+
+    imagettftext($image, 14, 0, 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 40, 
+                    280, $dk_grey, $font_path, 'Age Group');
+
+    imagettftext($image, 10, 0, 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 70, 
+                    315, $dk_grey, $font_path, '16 and below');
+
+    imagettftext($image, 10, 0, 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 70, 
+                    355, $dk_grey, $font_path, 'above 16');
+
+
+    # Draw the text legends at the bottom of tge screen
 
     imagettftext($image, 10, 0, (int)BAR_WIDTH + 50, 480, $dk_grey, $font_path, 'Female');
 
     imagettftext($image, 10, 0, (int)3*BAR_WIDTH + 150, 480, $dk_grey, $font_path, 'Male');
 
-    imagettftext($image, 12, 0, 422, 500, $dk_grey, $font_path, 'Gender');
+    imagettftext($image, 12, 0, 422, 550, $dk_grey, $font_path, 'Gender');
 
-    imagepng($image, '/home/rdapaz/uni/CSG6206/portfolio3/demo.png');
-    imagedestroy($image);
 }
 
 /*  Part e. 
-        Create a SQLite3 database with one database table
- */
+    Create a SQLite3 database with one database table
+*/
 
 $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
 $db = new SQLite3($path);
 $db->enableExceptions(true);
 
-/* We will now create the table in our database to store
- the data in our array
- */
+/* 
+   We will now create the table in our database to store
+   the data in our array
+*/
 
 $sql =<<<EOF
     CREATE TABLE IF NOT EXISTS demographics
@@ -216,7 +265,7 @@ try {
     $ret = $db->exec($sql);
 } 
 catch (Exception $e) {
-    echo 'Caught Exception: ' . $e.getMessage();
+    echo 'Caught Exception: ' . $e->getMessage();
 }
 
 /* 
@@ -238,7 +287,8 @@ foreach ($data as $p) {
         $insert = $smt->execute();
     } 
     catch (Exception $e) {
-        echo 'Caught Exception: ' . $e.getMessage();
+        echo 'Caught Exception: ' . $e->getMessage();
+        break;
     }
 }
 
