@@ -15,17 +15,17 @@
 */
 
 $data = array(
-            array(  "ID"  		=> 1, 
-                    "Name"     	=> "Anna",
+            array(  "ID"        => 1, 
+                    "Name"      => "Anna",
                     "Gender"    => "Female",
                     "Age"       => 12
                  ),
-            array(  "ID"       	=> 2,
+            array(  "ID"        => 2,
                     "Name"      => "Bill",
                     "Gender"    => "Male",
                     "Age"       => 45
                  ),
-            array(  "ID"       	=> 3,
+            array(  "ID"        => 3,
                     "Name"      => "Chase",
                     "Gender"    => "Male",
                     "Age"       => 22 
@@ -35,32 +35,32 @@ $data = array(
                     "Gender"    => "Female",
                     "Age"       => 36 
                  ),
-            array(  "ID"		=> 5,
+            array(  "ID"        => 5,
                     "Name"      => "Emily",
                     "Gender"    => "Female",
                     "Age"       => 11
                  ),
-            array(  "ID"      	=> 6,
+            array(  "ID"        => 6,
                     "Name"      => "Dan",
                     "Gender"    => "Male",
                     "Age"       => 16
                  ),
-            array(  "ID"      	=> 7,
+            array(  "ID"        => 7,
                     "Name"      => "Bob",
                     "Gender"    => "Male",
                     "Age"       => 12
                  ),
-            array(  "ID"      	=> 8,
+            array(  "ID"        => 8,
                     "Name"      => "Cassey",
                     "Gender"    => "Female",
                     "Age"       => 33
                  ),
-            array(  "ID"      	=> 9,
+            array(  "ID"        => 9,
                     "Name"      => "Alan",
                     "Gender"    => "Male",
                     "Age"       => 25
                  ),
-            array(  "ID"      	=> 10,
+            array(  "ID"        => 10,
                     "Name"      => "Jen",
                     "Gender"    => "Female",
                     "Age"       => 32
@@ -134,7 +134,7 @@ function generateHistogram($demographic_data) {
         using the eyedropper tool in Paint
     */
 
-    $font_path = '/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf';
+    $font_path = '/usr/share/fonts/truetype/custom/Monaco_Linux.ttf';
     $grey = imageColorAllocate($image, 150, 150, 150);
     $lt_grey = imageColorAllocate($image, 200, 200, 200);
     $dk_grey = imageColorAllocate($image, 32, 32, 32);
@@ -236,13 +236,16 @@ function generateHistogram($demographic_data) {
 
     imagettftext($image, 12, 0, 422, 550, $dk_grey, $font_path, 'Gender');
 
+    imagepng($image, '/root/Desktop/CSG6206/portfolio3/demo.png');
+    imagedestroy($image);
+
 }
 
 /*  Part e. 
     Create a SQLite3 database with one database table
 */
 
-$path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
+$path = "/root/Desktop/CSG6206/portfolio3/demo.db";
 $db = new SQLite3($path);
 $db->enableExceptions(true);
 
