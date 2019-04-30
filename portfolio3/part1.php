@@ -123,9 +123,28 @@ function generateHistogram($demographic_data) {
     
     $d = $demographic_data;
 
+    /* 
+        To make this flexible for all data values we need to consider cases where
+        the key isn't found (i.e. we do not have a count for that category).  This is 
+        done below.
+    */
+
+
+    $el1 = array_key_exists('Male', $d) && array_key_exists('above 16', $d['Male']) ? 
+                    $d['Male']['above 16'] : 0;
+
+    $el2 = array_key_exists('Male', $d) && array_key_exists('16 and below', $d['Male']) ? 
+                    $d['Male']['16 and below'] : 0;
+
+    $el3 = array_key_exists('Female', $d) && array_key_exists('above 16', $d['Female']) ? 
+                    $d['Female']['above 16'] : 0;
+
+    $el4 = array_key_exists('Female', $d) && array_key_exists('16 and below', $d['Female']) ? 
+                    $d['Female']['16 and below'] : 0;
+
     $max_val = max(array(
-                    $d['Male']['above 16'] + $d['Male']['16 and below'],
-                    $d['Female']['above 16'] + $d['Female']['16 and below']
+                    $el1 + $el2,
+                    $el3 + $el4
                     ) 
               );
     /*     
@@ -152,6 +171,7 @@ function generateHistogram($demographic_data) {
         $brx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER;
         $bry = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $i/$max_val);
         imageline($image, $tlx, $tly, $brx, $bry, $lt_grey);
+        imagettftext($image, 10, 0, $tlx+5, $tly-10, $dk_grey, $font_path, $i);
     }
 
 
@@ -162,6 +182,7 @@ function generateHistogram($demographic_data) {
     $brx = $tlx + BAR_WIDTH;
     $bry = BAR_TOP;
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $salmon);
+    imagettftext($image, 10, 0, (int)($tlx + 0.5*BAR_WIDTH) , $tly-20, $dk_grey, $font_path, $el4);
     
     # Draw the bar for females above 16
     $tlx = $brx + SPACER;
@@ -170,6 +191,7 @@ function generateHistogram($demographic_data) {
     $bry = BAR_TOP;
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $cyan);
     imageline($image, $tlx, BAR_BASE, $tlx, BAR_TOP, $lt_grey);
+    imagettftext($image, 10, 0, (int)($tlx + 0.5*BAR_WIDTH) , $tly-20, $dk_grey, $font_path, $el3);
 
     # Draw the bar for males 16 and below
     $tlx = $brx + MARGIN;
@@ -177,6 +199,7 @@ function generateHistogram($demographic_data) {
     $brx = $tlx + BAR_WIDTH;
     $bry = BAR_TOP;
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $salmon);
+    imagettftext($image, 10, 0, (int)($tlx + 0.5*BAR_WIDTH) , $tly-20, $dk_grey, $font_path, $el2);
     
     # Draw the bar for males above 16
     $tlx = $brx + SPACER;
@@ -185,6 +208,7 @@ function generateHistogram($demographic_data) {
     $bry = BAR_TOP;
     imagefilledrectangle($image, $tlx, $tly, $brx, $bry, $cyan);
     imageline($image, $tlx, BAR_BASE, $tlx, BAR_TOP, $lt_grey);
+    imagettftext($image, 10, 0, (int)($tlx + 0.5*BAR_WIDTH) , $tly-20, $dk_grey, $font_path, $el1);
 
     # Draw the white bar at the bottom
     $tlx = 50;
@@ -236,6 +260,9 @@ function generateHistogram($demographic_data) {
 
     imagettftext($image, 12, 0, 422, 550, $dk_grey, $font_path, 'Gender');
 
+    imagettftext($image, 12, 0, 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER + 40, 
+                    180, $dk_grey, $font_path, 'Count');
+
     imagepng($image, '/root/Desktop/CSG6206/portfolio3/demo.png');
     imagedestroy($image);
 
@@ -251,7 +278,8 @@ $db->enableExceptions(true);
 
 /* 
    We will now create the table in our database to store
-   the data in our array
+   the data in our array.  Note that id is automatically
+   created
 */
 
 $sql =<<<EOF
@@ -262,6 +290,8 @@ $sql =<<<EOF
         Gender TEXT,
         Age INT
     );
+    DELETE FROM demographics;
+    REINDEX;
 EOF;
 
 try {
