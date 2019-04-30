@@ -38,79 +38,95 @@ function generateTable($db, $sql) {
     return $retVal;
 }
 
-header('Content-Type:text/plain'); 
+function preamble() {
+  header('Content-Type:text/plain'); 
 
-echo <<<EOF
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+  echo <<<EOF
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  </style>
+  </head>
+  <body>
+
+  <h2>Table 1</h2>
+
+  <table>
+  <tr>
+  <th>ID</th>
+  <th>Name</th>
+  <th>Gender</th>
+  <th>Age</th>
+  </tr>
+  EOF;
 }
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+try { 
+  $options = getopt("p:");
+  $path = $options['p'];
 }
-
-</style>
-</head>
-<body>
-
-<h2>Table 1</h2>
-
-<table>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Gender</th>
-<th>Age</th>
-</tr>
-EOF;
-
-$options = getopt("p:");
-$path = $options['p'];
+catch (Exception $e) {
+  echo "[-] Caught exception: " . $e->getMessage() . "\n";
+}
 
 if ($path == false) {
     echo "[-] Please specify path\n";
 }
+elseif (file_exists(realpath($path))) {
+  preamble();
+  // $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
+  $db = new SQLite3($path);
 
-// $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
-$db = new SQLite3($path);
+  $sql = "SELECT ID, Name, Gender, Age FROM demographics
+          WHERE Gender = 'Female' ORDER BY Age ASC;";
+          
+  $query_results = generateTable($db, $sql);
+  echo $query_results;
+  print "</table>\n";
 
-$sql = "SELECT ID, Name, Gender, Age FROM demographics
-        WHERE Gender = 'Female' ORDER BY Age ASC;";
-        
-$query_results = generateTable($db, $sql);
-echo $query_results;
-print "</table>\n";
+  echo<<<EOF
 
-echo<<<EOF
+  <h2>Table 2</h2>
 
-<h2>Table 2</h2>
+  <table>
+  <tr>
+  <th>ID</th>
+  <th>Name</th>
+  <th>Gender</th>
+  <th>Age</th>
+  </tr>
+  EOF;
 
-<table>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Gender</th>
-<th>Age</th>
-</tr>
-EOF;
+  $sql = "SELECT ID, Name, Gender, Age from demographics
+          WHERE Gender = 'Male' ORDER BY Age DESC;";
 
-$sql = "SELECT ID, Name, Gender, Age from demographics
-        WHERE Gender = 'Male' ORDER BY Age DESC;";
+  $query_results = generateTable($db, $sql);
+  echo $query_results;
+  print "</table>\n";
 
-$query_results = generateTable($db, $sql);
-echo $query_results;
-print "</table>\n";
+  echo<<<EOF
+  </body>
+  </html>
+  EOF;
+} 
 
-echo<<<EOF
-</body>
-</html>
-EOF
+else {
+  if (! $path =~ '\.db') { 
+    echo '[-] Invalid file/path specified' . "\n"; 
+  }
+}
+
 ?>
