@@ -74,6 +74,9 @@ function preamble() {
   EOF;
 }
 
+$regex = '%\.db$%';
+$dummy = '';
+
 try { 
   $options = getopt("p:");
   $path = $options['p'];
@@ -85,7 +88,7 @@ catch (Exception $e) {
 if ($path == false) {
     echo "[-] Please specify path\n";
 }
-elseif (file_exists(realpath($path))) {
+elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
   preamble();
   // $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
   $db = new SQLite3($path);
@@ -124,9 +127,7 @@ elseif (file_exists(realpath($path))) {
 } 
 
 else {
-  if (! $path =~ '\.db') { 
     echo '[-] Invalid file/path specified' . "\n"; 
-  }
 }
 
 ?>
