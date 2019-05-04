@@ -2,12 +2,12 @@
 
 /*     
     ---------------------------------------------------------
-    Portfolio 3
+    Portfolio 3 - Part 1
     ---------------------------------------------------------
 
     CSG6226 - 2019 Semester 1
 
-    Ricardo da Paz
+    By: Ricardo da Paz
 
     Part a.
         Creation of multidimensional array to store the data
@@ -70,13 +70,14 @@ $data = array(
                  ),
         );
 
-
-// Test code
+// ------------------------------------------------------------------------------------------
+// TEST CODE
 // Get the contents of the JSON file 
 $strJsonFileContents = file_get_contents("demo_data.json"); # TODO: Comment out for final run
 // Convert to array 
 $data = json_decode($strJsonFileContents, true); # TODO: Comment out for final run
 // var_dump($data); // print array
+// ------------------------------------------------------------------------------------------
 
 
 function parseDemographics($data) {
