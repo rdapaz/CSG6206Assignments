@@ -1,8 +1,10 @@
 <?php
 
-/*     Portfolio 3
-       -----------
-    
+/*     
+    ---------------------------------------------------------
+    Portfolio 3
+    ---------------------------------------------------------
+
     CSG6226 - 2019 Semester 1
 
     Ricardo da Paz
@@ -11,6 +13,7 @@
         Creation of multidimensional array to store the data
     Part b.
         Store the entries of Table 1 into the array
+    ---------------------------------------------------------
 
 */
 
@@ -67,18 +70,23 @@ $data = array(
                  ),
         );
 
+
+// Test code
 // Get the contents of the JSON file 
-// $strJsonFileContents = file_get_contents("demo_data.json");
+$strJsonFileContents = file_get_contents("demo_data.json"); # TODO: Comment out for final run
 // Convert to array 
-// $data = json_decode($strJsonFileContents, true);
+$data = json_decode($strJsonFileContents, true); # TODO: Comment out for final run
 // var_dump($data); // print array
 
 
 function parseDemographics($data) {
 
-    /*     Part c. 
-            Process the contents of the array to generate
-            the demographic data
+    /*     
+        ---------------------------------------------
+        Part c. 
+        Process the contents of the array to generate
+        the demographic data
+        ---------------------------------------------
     */ 
 
     $demo = array();
@@ -114,9 +122,13 @@ function generateHistogram($demographic_data) {
     header ('Content-Type: image/png');
 
 
-    # We chose a 16:9 ratio for our histogram and
-    # further selected 1000mm length, hence determining
-    # the height by: height = (length x 9)/16
+    /*
+        --------------------------------------------------
+        We chose a 16:9 ratio for our histogram and
+        further selected 1000mm length, hence determining
+        the height by: height = (length x 9)/16
+        --------------------------------------------------
+    */
     define("WIDTH", 1000);
     define("HEIGHT", (int)(WIDTH*9)/16);
     define("BAR_WIDTH", 150);
@@ -134,6 +146,7 @@ function generateHistogram($demographic_data) {
         To make this flexible for all data values we need to consider cases where
         the key isn't found (i.e. we do not have a count for that category).  This is 
         done below.
+        ------------------------------------------------------------------------------
     */
 
 
@@ -155,9 +168,11 @@ function generateHistogram($demographic_data) {
                     ) 
               );
     /*     
+        -----------------------------------------------------------------
         Create variables for the colours required for the
         histogram.  Note that we captured the colour
         using the eyedropper tool in Paint
+        -----------------------------------------------------------------
     */
 
     $font_path = '/usr/share/fonts/truetype/custom/Monaco_Linux.ttf';
@@ -174,7 +189,19 @@ function generateHistogram($demographic_data) {
     # Used to fine tune display depending on how many horizontal lines to
     $skip = 1;
     # Draw horizontal grid lines
-    for ($i=0; $i<$max_val; $i++) {
+
+    /* 
+        -----------------------------------------------------------------
+        TODO:
+        In the event that the data source is changed to the json file
+        it is important to change $i++ below to $i += 20 or a suitable
+        common divisor of $max_val.  This is to avoid having
+        too many horizontal lines
+        -----------------------------------------------------------------
+    */
+
+
+    for ($i=0; $i<$max_val; $i+=20) {
         $tlx = 50;
         $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $i/$max_val);
         $brx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER;
@@ -277,8 +304,11 @@ function generateHistogram($demographic_data) {
 
 }
 
-/*  Part e. 
+/*  
+    -------------------------------------------------
+    Part e. 
     Create a SQLite3 database with one database table
+    -------------------------------------------------
 */
 
 $path = "/root/Desktop/CSG6206/portfolio3/demo.db";
@@ -286,9 +316,11 @@ $db = new SQLite3($path);
 $db->enableExceptions(true);
 
 /* 
+   -----------------------------------------------------
    We will now create the table in our database to store
    the data in our array.  Note that id is automatically
    created
+   -----------------------------------------------------
 */
 
 $sql =<<<EOF
@@ -311,9 +343,11 @@ catch (Exception $e) {
 }
 
 /* 
+    -------------------------------------------------
     Part f.
-        Store the contents of the array into the database
-        table.
+    Store the contents of the array into the database
+    table.
+    -------------------------------------------------
  */
 
 $sql = "INSERT INTO demographics

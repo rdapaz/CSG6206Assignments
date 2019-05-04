@@ -1,13 +1,16 @@
 <?php
 
-/*     Portfolio 3
-       -----------
+/*  
+    ---------------------------------------------------------
+    Portfolio 3
+    -----------
     
     CSG6226 - 2019 Semester 1
 
     Part II
 
     Ricardo da Paz
+    ---------------------------------------------------------
 
 */
 
@@ -139,7 +142,7 @@ elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
 
 /*
   d.
-    Generate the two html tables by po;ulating the data from the queries in the previous step.
+    Generate the two html tables by poulating the data from the queries in the previous step.
 */
 
   $query_results = generateTable($db, $sql);
