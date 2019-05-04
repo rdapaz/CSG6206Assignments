@@ -1,5 +1,0 @@
-md5hash.db
-portfolio1
-portfolio2
-portfolio3
-README.md

@@ -9,11 +9,6 @@
 
     Ricardo da Paz
 
-    Part a.
-        
-    Part b.
-        Store the entries of Table 1 into the array
-
 */
 
 function generateTable($db, $sql) {
@@ -39,6 +34,13 @@ function generateTable($db, $sql) {
 }
 
 function preamble() {
+
+/*
+  e. (partial)
+    Generate a static html page to display the two html tables generated in step (d).
+*/
+
+
   header('Content-Type:text/plain'); 
 
   echo <<<EOF
@@ -74,6 +76,14 @@ function preamble() {
   EOF;
 }
 
+/*
+  a.
+    Start this task by accepting and validating the SQLite database given as a
+    command line argument to the script
+
+    php part2.php -p <path_to_db>
+*/
+
 $regex = '%\.db$%';
 $dummy = '';
 
@@ -91,7 +101,18 @@ if ($path == false) {
 elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
   preamble();
   // $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
+
+/*
+  b.
+    Create a connection to the database name received in step (a)
+*/
+
   $db = new SQLite3($path);
+
+/*
+  c.
+    Execute SQL queries to fetc hthe data required to populate Table 2 and Table 3
+*/
 
   $sql = "SELECT ID, Name, Gender, Age FROM demographics
           WHERE Gender = 'Female' ORDER BY Age ASC;";
@@ -115,6 +136,11 @@ elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
 
   $sql = "SELECT ID, Name, Gender, Age from demographics
           WHERE Gender = 'Male' ORDER BY Age DESC;";
+
+/*
+  d.
+    Generate the two html tables by po;ulating the data from the queries in the previous step.
+*/
 
   $query_results = generateTable($db, $sql);
   echo $query_results;

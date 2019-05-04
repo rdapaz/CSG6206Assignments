@@ -67,6 +67,13 @@ $data = array(
                  ),
         );
 
+// Get the contents of the JSON file 
+// $strJsonFileContents = file_get_contents("demo_data.json");
+// Convert to array 
+// $data = json_decode($strJsonFileContents, true);
+// var_dump($data); // print array
+
+
 function parseDemographics($data) {
 
     /*     Part c. 
@@ -164,6 +171,8 @@ function generateHistogram($demographic_data) {
     # Draw grey rectangle
     imagefilledrectangle($image, 50, 50, 950, 530, $grey);
 
+    # Used to fine tune display depending on how many horizontal lines to
+    $skip = 1;
     # Draw horizontal grid lines
     for ($i=0; $i<$max_val; $i++) {
         $tlx = 50;
