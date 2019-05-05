@@ -12,6 +12,9 @@
 
 */
 
+# Stop errors from being displayed
+error_reporting(E_ALL && ~E_NOTICE); 
+
 function generateTable($db, $sql) {
     $retVal = '';
     
@@ -32,6 +35,18 @@ function generateTable($db, $sql) {
         $retVal .= "</tr>\n";
     }
     return $retVal;
+}
+
+function usage() {
+  echo <<<EOF
+
+Portfolio 3 - part 2: HTML Generator
+------------------------------------
+
+Usage: php part2.php -p <path_to_db>
+
+
+EOF;
 }
 
 function preamble() {
@@ -97,7 +112,8 @@ catch (Exception $e) {
 }
 
 if ($path == false) {
-    echo "[-] Please specify path\n";
+    usage();
+    echo "[-] Please specify a path to the db with -p <path>\n";
 }
 elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
   preamble();
@@ -154,7 +170,8 @@ elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
 } 
 
 else {
-    echo '[-] Invalid file/path specified' . "\n"; 
+  usage();
+  echo '[-] Invalid file/path specified' . "\n"; 
 }
 
 ?>

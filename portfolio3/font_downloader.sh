@@ -3,6 +3,8 @@
 # ------------------------------------------------------------------------
 # This was adapted from:
 # https://github.com/cstrap/monaco-font/blob/master/install-font-ubuntu.sh
+# Note that I DID NOT write the script only adapted it by hard-coding
+# one of the URLs which worked reliably for me...
 # ------------------------------------------------------------------------
 
 URL='http://jorrel.googlepages.com/Monaco_Linux.ttf'

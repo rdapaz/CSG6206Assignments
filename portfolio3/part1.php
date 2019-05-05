@@ -73,9 +73,9 @@ $data = array(
 // ------------------------------------------------------------------------------------------
 // TEST CODE
 // Get the contents of the JSON file 
-$strJsonFileContents = file_get_contents("demo_data.json"); # TODO: Comment out for final run
+// $strJsonFileContents = file_get_contents("demo_data.json"); # TODO: Comment out for final run
 // Convert to array 
-$data = json_decode($strJsonFileContents, true); # TODO: Comment out for final run
+// $data = json_decode($strJsonFileContents, true); # TODO: Comment out for final run
 // var_dump($data); // print array
 // ------------------------------------------------------------------------------------------
 
@@ -173,6 +173,9 @@ function generateHistogram($demographic_data) {
         Create variables for the colours required for the
         histogram.  Note that we captured the colour
         using the eyedropper tool in Paint
+
+        Dependency: installation of Monaco font with the 
+        font_downloader.sh script
         -----------------------------------------------------------------
     */
 
@@ -202,7 +205,7 @@ function generateHistogram($demographic_data) {
     */
 
 
-    for ($i=0; $i<$max_val; $i+=20) {
+    for ($i=0; $i<$max_val; $i+=$max_val/5) {
         $tlx = 50;
         $tly = BAR_TOP - (int)((BAR_TOP - BAR_BASE) * $i/$max_val);
         $brx = 4 * BAR_WIDTH + 2 * MARGIN + 2 * SPACER;
