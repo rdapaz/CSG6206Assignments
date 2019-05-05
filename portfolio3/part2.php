@@ -117,7 +117,6 @@ if ($path == false) {
 }
 elseif (file_exists(realpath($path)) && preg_match($regex, $path, $dummy)) {
   preamble();
-  // $path = "/home/rdapaz/uni/CSG6206/portfolio3/demo.db";
 
 /*
   b.
