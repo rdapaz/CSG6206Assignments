@@ -1,55 +1,53 @@
-#!/usr/bin/python3
-import matplotlib.pyplot as plt
-import numpy as np
-import csv
 import os
 import sys
-import pprint
-BINS = 10
-
-def pretty_printer(o):
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(o)
 
 
-def plot(lst):
-    y_values = np.array(lst)
-    print(y_values)
-    plt.hist(y_values, normed=True, bins=10)
-    plt.show()
+class Viz:
 
-def count_elements(seq, bin_size, max_val):
-    
-    hist = {}
+    def __init__(self, DSfilepath):
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        self.DSfilepath = DSfilepath
+        header = ('id', 'Weight', 'Height', 'Gender', 'Category')
+        self.df = pd.read_csv(self.DSfilepath, names=header)
+        self.gender = self.df['Gender']
+        self.category = self.df['Category']
+        self.maleWeights = self.df['Weight'][self.gender=='M']
+        self.femaleWeights = self.df['Weight'][self.gender=='F']
 
-    i = 0
-    inc = int(max_val/bin_size)
+    def plot_histogram(self):
+        plt.rcParams['figure.figsize'] = (5, 7)
+        plt.rcParams['figure.dpi'] = 150
+        plt.subplot(211)
+        plt.hist(self.maleWeights, color='lightblue', bins='auto', hatch='x')
+        plt.title('Male Weight Distribution')
+        plt.subplot(212)
+        plt.hist(self.femaleWeights, color='pink', bins='auto', hatch='.')
+        plt.title('Female Weight Distribution')
+        plt.show()
+        
+    def scatter_plot(self):
+        plt.rcParams['figure.figsize'] = (10, 5)
+        plt.rcParams['figure.dpi'] = 150
+        plt.subplot(121)
+        colYG = np.where(df['Category']=='Yellow', 'yellow', 'green')
+        plt.scatter(df['Category'], df['Height'], s=df['Weight'], c=colYG)
+        plt.xlabel('Category')
+        plt.ylabel('Height')
+        plt.title("Heights by Category\n(weight by dot size)")
+        plt.subplot(122)
+        colMF = np.where(df['Gender']=='M', 'lightblue', 'pink')
+        plt.scatter(df['Gender'], df['Height'], s=df['Weight'], c=colMF)
+        plt.xlabel('Gender')
+        plt.ylabel('Height')
+        plt.title("Heights by Gender\n(weight by dot size)")
+        plt.show()
 
-    while i <= max_val:
-        i = max_val if i >= max_val else i
-        for el in seq:
-            if i <= el < i+inc-1:
-                if (i, i+inc-1) not in hist:
-                    hist[(i, i+inc-1)] = 0
-                hist[(i, i+inc-1)] += 1
-        i += inc
 
-    return hist
 
-current_path = os.path.dirname(sys.argv[0])
-header = ('id', 'Weight', 'Height', 'Gender', 'Category')
-
-with open(os.path.join(current_path, 'dataset.csv'), 'r') as csvfile:
-    dsReader = csv.DictReader(csvfile, fieldnames=header, delimiter=',')
-    dsMales = [x for x in dsReader if x['Gender'] == 'M']
-    max_val = max(int(x['Weight']) for x in dsMales)
-    seq = sorted(int(x['Weight']) for x in dsMales)
-    count1 = count_elements(seq, BINS, max_val)
-    plot(seq)
-
-    csvfile.seek(0)
-    dsReader = csv.DictReader(csvfile, fieldnames=header, delimiter=',')
-    dsFemales = [x for x in dsReader if x['Gender'] == 'F']
-    seq = sorted(int(x['Weight']) for x in dsFemales)
-    count2 = count_elements(seq, BINS, max_val)
-    plot(count2)
+if __name__ == '__main__':
+    current_dir = os.path.dirname(sys.argv[0])
+    current_path = os.path.join(current_dir, 'files', 'dataset.csv')
+    viz1 = Viz(current_path)
+    viz1.plot_histogram()
+    viz1.scatter_plot()
