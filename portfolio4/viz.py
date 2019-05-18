@@ -17,14 +17,18 @@ class Viz:
         self.femaleWeights = self.df['Weight'][self.gender == 'F']
 
     def plot_histogram(self):
-        plt.rcParams['figure.figsize'] = (5, 7)
+        plt.rcParams['figure.figsize'] = (5, 11)
         plt.rcParams['figure.dpi'] = 150
         plt.subplot(211)
         plt.hist(self.maleWeights, color='lightblue', bins='auto', hatch='x')
         plt.title('Male Weight Distribution')
+        plt.xlabel('Weight')
+        plt.ylabel('Frequency')
         plt.subplot(212)
         plt.hist(self.femaleWeights, color='pink', bins='auto', hatch='.')
         plt.title('Female Weight Distribution')
+        plt.xlabel('Weight')
+        plt.ylabel('Frequency')
         plt.show()
 
     def scatter_plot(self):
