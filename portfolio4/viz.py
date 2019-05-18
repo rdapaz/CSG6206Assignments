@@ -13,8 +13,8 @@ class Viz:
         self.df = pd.read_csv(self.DSfilepath, names=header)
         self.gender = self.df['Gender']
         self.category = self.df['Category']
-        self.maleWeights = self.df['Weight'][self.gender=='M']
-        self.femaleWeights = self.df['Weight'][self.gender=='F']
+        self.maleWeights = self.df['Weight'][self.gender == 'M']
+        self.femaleWeights = self.df['Weight'][self.gender == 'F']
 
     def plot_histogram(self):
         plt.rcParams['figure.figsize'] = (5, 7)
@@ -31,19 +31,20 @@ class Viz:
         plt.rcParams['figure.figsize'] = (10, 5)
         plt.rcParams['figure.dpi'] = 150
         plt.subplot(121)
-        colYG = np.where(self.df['Category']=='Yellow', 'yellow', 'green')
-        plt.scatter(self.df['Category'], self.df['Height'], s=self.df['Weight'], c=colYG)
+        colYG = np.where(self.df['Category'] == 'Yellow', 'yellow', 'green')
+        plt.scatter(self.df['Category'], self.df['Height'],
+                    s=self.df['Weight'], c=colYG)
         plt.xlabel('Category')
         plt.ylabel('Height')
         plt.title("Heights by Category\n(weight by dot size)")
         plt.subplot(122)
-        colMF = np.where(self.df['Gender']=='M', 'lightblue', 'pink')
-        plt.scatter(self.df['Gender'], self.df['Height'], s=self.df['Weight'], c=colMF)
+        colMF = np.where(self.df['Gender'] == 'M', 'lightblue', 'pink')
+        plt.scatter(self.df['Gender'], self.df['Height'],
+                    s=self.df['Weight'], c=colMF)
         plt.xlabel('Gender')
         plt.ylabel('Height')
         plt.title("Heights by Gender\n(weight by dot size)")
         plt.show()
-
 
 
 if __name__ == '__main__':
