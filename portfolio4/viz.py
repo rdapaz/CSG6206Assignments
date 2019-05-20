@@ -3,6 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import seaborn as sns
 
 
 class Viz:
@@ -17,36 +18,39 @@ class Viz:
         self.femaleWeights = self.df['Weight'][self.gender == 'F']
 
     def plot_histogram(self):
-        plt.rcParams['figure.figsize'] = (5, 11)
+        plt.rcParams['figure.figsize'] = (8, 12)
         plt.rcParams['figure.dpi'] = 150
+        sns.set()
         plt.subplot(211)
         plt.hist(self.maleWeights, color='lightblue', bins='auto', hatch='x')
-        plt.title('Male Weight Distribution')
-        plt.xlabel('Weight')
+        plt.suptitle('Weight Distribution by Gender', fontsize=16)
+        plt.title('Males', fontsize=14)
+        plt.xlabel('Weight (Kg)')
         plt.ylabel('Frequency')
         plt.subplot(212)
         plt.hist(self.femaleWeights, color='pink', bins='auto', hatch='.')
-        plt.title('Female Weight Distribution')
-        plt.xlabel('Weight')
+        plt.title('Females', fontsize=14)
+        plt.xlabel('Weight (Kg)')
         plt.ylabel('Frequency')
         plt.show()
 
     def scatter_plot(self):
         plt.rcParams['figure.figsize'] = (10, 5)
         plt.rcParams['figure.dpi'] = 150
+        sns.set()
         plt.subplot(121)
         colYG = np.where(self.df['Category'] == 'Yellow', 'yellow', 'green')
         plt.scatter(self.df['Category'], self.df['Height'],
                     s=self.df['Weight'], c=colYG)
         plt.xlabel('Category')
-        plt.ylabel('Height')
+        plt.ylabel('Height (cm)')
         plt.title("Heights by Category\n(weight by dot size)")
         plt.subplot(122)
         colMF = np.where(self.df['Gender'] == 'M', 'lightblue', 'pink')
         plt.scatter(self.df['Gender'], self.df['Height'],
                     s=self.df['Weight'], c=colMF)
         plt.xlabel('Gender')
-        plt.ylabel('Height')
+        plt.ylabel('Height (cm)')
         plt.title("Heights by Gender\n(weight by dot size)")
         plt.show()
 
