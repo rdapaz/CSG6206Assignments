@@ -155,6 +155,6 @@ if __name__ == '__main__':
     # We call the plot_histogram method of the viz instance of the Viz Class
     viz1.plot_histogram()
     # We call the scatter_plot method of the viz instance of the Viz Class
+    # We do this once for each type of plot
     viz1.scatter_plot(plot_type=PlotType.SCATTER)
     viz1.scatter_plot(plot_type=PlotType.XY)
-
