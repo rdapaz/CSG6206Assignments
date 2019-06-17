@@ -1,0 +1,110 @@
+bash:
+  String Operations: |
+    alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    echo ${alpha:20}   -> "UVWXYZ"
+    echo ${alpha:0:2}  -> "AB"
+    echo ${alpha:(-3)} -> "XYZ"
+    echo ${alpha#*D}   -> "EFGHIJKLMNOPQRSTUVWXYZ"
+    echo ${alpha%D*}   -> "ABC"
+  Arguments and Input: |
+    $0 is the name of the script
+    $1 contains the first argument
+    $@ contains all arguments in a space separated String
+    $# contains the number of arguments
+    Checking for exactly one argument:
+    if [ $# -gt 1 ] || [ $# -lt 1 ]; then
+      usage
+      echo "[-] Required 1 argument, supplied $#..."
+      exit 1
+    else
+      ...
+    fi
+    Checking argument is a valid path
+    if [ ! -d $1 ]; then
+      ...
+    fi
+    Prompt user for input, interactively:
+    echo "Enter you name"; read name;
+    echo "${name}? That's a silly name!"
+  Arithmetic: |
+    Floating point relies on bc:
+    echo "scale=2; 7/2" | bc
+    # It is -eq -ne -lt -le -gt -ge rather than =, !=, <, <=, >, >= for 
+    integer arithmetic
+  Arrays: |
+    names=("Bob" "Jane" "Sue" "Fred")
+    echo ${names[0]}  -> "Bob"
+    echo ${names[-1]} -> "Fred"
+    echo ${names[-2]} -> "Sue"
+    names2=([5]="Bob" [10]="Jame" [15]="Sue")
+    echo $names[5] -> "[5]" #Really counterintuitive
+    echo ${names2[5]} -> "Bob" #This works
+  Program Flow: |
+    case $var in
+    "dog")
+      echo "Woof"
+    "cat" | "kitty")
+      echo "Meow!"
+    *)
+      echo "Default match"
+    if [[ $num -gt 1 || "$str" = "str" || -e $file ]];
+    then ...; else ...; fi
+    if [[ $content =~ 'Closed' ]]; then <-- Regular expressions
+      # echo 'Garage is closed'
+      status="Closed"
+    fi
+    for $name in ${names}
+    do
+      echo $name
+    done
+    cat employee.txt
+    100     Thomas     Manager    Sales    $5,000
+    awk '{print $2 $5}' employee.txt -> Thomas $5,000
+    echo "This is horrible" | sed 's/horrible/fantastic/g' -> "This is fantastic" 
+    fn_hello() { echo "Hello there $1"; return 0; }
+    fn_hello Ricardo -> "Hello there Ricardo"
+  Network Programming and Databases: |
+    content=`curl -L http://10.11.12.126  2> /dev/null | grep "Garage is"` # Grab page output to STDOUT
+    content=`wget -q -O - http://10.11.12.126 | grep "Garage is"` # Grab page output to STDOUT
+    sqlite3 '/home/rdapaz/Desktop/garage.sqlite3' \
+        "CREATE TABLE IF NOT EXISTS garage_status (id INTEGER PRIMARY KEY, status TEXT, epoch LONG);"
+
+    sqlite3 '/home/rdapaz/Desktop/garage.sqlite3' \
+        "INSERT INTO garage_status (status, epoch) VALUES (\"$status\", \"$epoch\");"
+
+
+    results=$(sqlite3 $folder/md5hash.db \
+      "SELECT DISTINCT filename, md5hash from md5hashes \
+       ORDER BY 1 DESC;")
+
+    if [ ${#results} -gt 0 ]; then
+      echo "[+] MD5 hashes for $folder:"
+      for entry in ${results[@]}; do
+    require 'sqlite3'
+
+    def init(db)
+        sql=<<EOF
+        CREATE TABLE IF NOT EXISTS tblDetails 
+        (
+            ID INTEGER PRIMARY KEY, NAME TEXT,
+            GENDER TEXT, AGE INT
+        );
+    EOF
+        db.execute(sql)
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Anna', 'Female', 12);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Bill', 'Male', 45);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Chase', 'Male', 22);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Dorothy', 'Female', 36);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Emily', 'Female', 11);")
+    end
+
+    db_path = ARGV[0]
+    db = SQLite3::Database.new( 'test.sqlite3' )
+    init(db)
+
+    age1, age2, person1, person2 = nil, nil, nil, nil
+
+    db.execute("SELECT NAME, MIN(AGE) FROM tblDetails WHERE GENDER = 'Female';") do |row|
+        person1 = row[0]
+        age1 = row[1]
+    end 

@@ -1,0 +1,95 @@
+ruby:
+  String Operations: |
+    alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    alpha[20..-1]               => "UVWXYZ"
+    alpha[0,1]                  => "AB"
+    alpha[-3..-1]               => "XYZ"
+    alpha[alpha.index('E')..-1] => "EFGHIJKLMNOPQRSTUVWXYZ"
+    alpha[0...alpha.index('D')] => "ABC"
+    alpha.downcase!             => "abcdefghijklmnopqrstuvwxyz"
+    alpha = "abcdefghijklmnopqrstuvwxyz"
+    alpha.upcase!               => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    alpha[]
+
+    "Sammy".ljust(20)           # "Sammy               "
+    "Sammy".rjust(20)           # "               Sammy"
+    "Sammy".rjust(20, "!")      # "!!!!!!!!!!!!!!!Sammy"
+    text = "Sammy has a balloon"
+    indices = text.chars.each_with_index
+              .select{|char, index| char == "a" } => [["a", 1], ["a", 7], ["a", 10], ["a", 13]]
+    indices.map{|pair| pair[1]} => [1, 7, 10, 13]
+    m = "Ricardo 51".match /\w+ (\d+)/ => #<MatchData "Ricardo 51" 1:"51">
+    m[1] => 51
+    m = "David 30".match /(?<name>\w+) (?<age>\d+)/
+    m[:age] # => "30"
+    m[:name] # => "David"
+    "abc".match?(/[A-Z]/i) => true
+    "abc".match?(/[A-Z]/) => false
+  Arguments and Input:
+    $0 is name of the script
+    ARGV[0] is the name of the first argument and so on...
+  Arrays: |
+    names = ["Bob", "Jane", "Sue", "Fred"]
+    names = %w{Bob Jane Sue Fred} => ["Bob", "Jane", "Sue", "Fred"]
+    puts "#{names[3]}" Fred
+  Program Flow: |
+    #!/usr/bin/ruby
+
+    def word_filter(line)
+        words = []
+        line.scan /[a-zA-Z0-9,.!?]+/ do |word|
+            unless word =~ /^[A-Z]/
+                words << word
+            end
+        end
+        return words
+    end33
+
+    def output(text_arr)
+        return text_arr.join " "
+    end
+
+    words = []
+    File.open('lorem.txt', 'r') do |f|
+        f.each_line do |line|
+            words << word_filter(line)
+        end
+    end
+
+    puts output(words)
+  Network Programming and Databases: |
+    require 'net/http'; host = "www.bom.gov.au"; path = "/"
+    http = Net::HTTP.new(host)
+    response = http.request_get(path)
+    body = response.body()
+    result = body.scan(/href="http:\/\/(.+?)"/) => [ ["media.bom.gov.au/"], ...]
+    #!/usr/bin/ruby
+    require 'sqlite3'
+    def init(db)
+        sql=<<EOF
+        CREATE TABLE IF NOT EXISTS tblDetails 
+        (
+            ID INTEGER PRIMARY KEY, NAME TEXT,
+            GENDER TEXT, AGE INT
+        );
+    EOF
+        db.execute(sql)
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Anna', 'Female', 12);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Bill', 'Male', 45);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Chase', 'Male', 22);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Dorothy', 'Female', 36);")
+        db.execute("INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES ('Emily', 'Female', 11);")
+    end
+    db_path = ARGV[0]
+    db = SQLite3::Database.new( 'test.sqlite3' )
+    init(db)
+    age1, age2, person1, person2 = nil, nil, nil, nil
+    db.execute("SELECT NAME, MIN(AGE) FROM tblDetails WHERE GENDER = 'Female';") do |row|
+        person1 = row[0]
+        age1 = row[1]
+    end 
+    db.execute("SELECT NAME, MAX(AGE) FROM tblDetails WHERE GENDER = 'Female';") do |row|
+        person2 = row[0]
+        age2 = row[1]
+    end 
+    puts "#{person2} is #{age2-age1} years older than #{person1}"

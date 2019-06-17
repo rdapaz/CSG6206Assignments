@@ -1,0 +1,129 @@
+php:
+  String Operations: |
+    <?php
+    $alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    echo substr($alpha,20); => "UVWXYZ" No carriage return at the end
+    echo substr($alpha,0,2); =>  "AB"
+    echo substr($alpha,strpos($alpha, 'E', 0), -1) => "EFGHIJKLMNOPQRSTUVWXY"
+    echo substr($alpha,0, strpos($alpha, 'D', 0)) => "ABC"
+    echo "Hello " . "World\n" => "Hello World"
+    ?>
+  Arithmetic: |
+    $a=1;
+    $b=2.3;
+    echo (int)$b + $a; => 3
+    echo $b + (float)$a; => 3.3
+  Program Flow: |
+    switch ($animal) {
+      case "dog":
+        echo "Woof!";
+        break;
+      case "cat":
+        echo "Meow!";
+        break;
+      default:
+        echo "Grrr!"
+    }
+    $x = 1;
+    while (<cond>) {... $x++;}
+    do {} while <cond>;
+    for ($i=0; $i<10; $i++) {
+      echo $i . "\n";
+    }
+    # Reading files
+    $filename = "/home/rdapaz/projects/CSG6206/test.txt"
+    $handle = fopen($filename, 'r');
+    $contents = fread($handle, filesize($filename));
+    fclose($handle);
+    echo $contents;
+    # Counting Vowels
+    preg_match_all("/[aeiou]/i", $contents, $matches);
+    $vowels = count($matches[0]);
+
+    # Counting Consonants
+    preg_match_all("/[bcdfghjklmnpqrstvwxyz]/i", $contents, $matches);
+    $consonants = count($matches[0]);
+
+    # Counting Words
+    preg_match_all("/\w+/i", $contents, $matches);
+    $words = count($matches[0]);
+    <?php 
+    function word_filter($word_arr) {
+        $target_words = Array();
+        foreach ($word_arr[0] as $word) {
+            if (! preg_match('/^[A-Z]/', $word) ) {
+                array_push($target_words, $word);
+            }
+        }
+        return $target_words;
+    }
+    function output($arr){
+        return implode(" ", $arr);
+    }
+    $filename = "/home/rdapaz/projects/CSG6206/lorem.txt";
+    $handle = fopen($filename, 'r');
+    $contents = fread($handle, filesize($filename));
+    fclose($handle);
+    preg_match_all('/[a-zA-Z0-9,.!?]+/', $contents, $matches);
+    $word_arr = word_filter($matches);
+    print output($word_arr);
+    ?>
+
+  Arrays: |
+    $arr = array(1, 2, 3);
+    $arr = array(id => 1, name => "Ricardo", surname => "da Paz");
+    // Nested...
+    $data = array(
+                array(  "ID"        => 1, 
+                        "Name"      => "Anna",
+                        "Gender"    => "Female",
+                        "Age"       => 12
+                     ),
+                     ...
+                  );
+    
+    $demo = array();
+    foreach ($data as $person) {
+        if (!array_key_exists($person["Gender"], $demo)) {
+            $demo[$person["Gender"]] = array();
+        }
+  Network Programming and Databases: |
+    <?php
+
+    function init($db) {
+      $table_vals = array(
+                          array('Dorothy', 'Female',    36),
+                          array('Emily',   'Female',    11),
+                      );
+
+      $sql =  "CREATE TABLE IF NOT EXISTS tblDetails";
+      $sql .= "(";
+      $sql .= "ID INTEGER PRIMARY KEY, NAME TEXT,";
+      $sql .=  "GENDER TEXT, AGE INT";
+      $sql .= ");";
+
+      $db->exec($sql);
+
+      foreach ($table_vals as $key){
+          $name = $key[0];
+          $gender = $key[1];
+          $age = $key[2];
+          $statement = $db->prepare('INSERT INTO tblDetails (NAME, GENDER, AGE) VALUES (:name, :gender, :age);');
+          $statement->bindValue(':name', $name);
+          $statement->bindValue(':gender', $gender);
+          $statement->bindValue(':age', $age);
+          $statement->execute();
+          }
+          return 0;
+    }
+
+    $db = new SQLite3( 'test.sqlite' );
+    init($db);
+
+    $age1 = NULL; $age2 = NULL; $person1 = NULL; $person2 = NULL;
+
+    $results = $db->query("SELECT NAME, MIN(AGE) AS AGE FROM tblDetails WHERE GENDER = 'Female';"); 
+    while ( $row = $results->fetchArray() ) {
+        $person1 = $row["NAME"];
+        $age1 = $row["AGE"];
+    }
